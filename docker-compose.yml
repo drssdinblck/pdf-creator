@@ -1,0 +1,26 @@
+version: '3'
+services:
+  dev: &dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - .:/pdf-creator
+    stdin_open: true
+    tty: true
+    container_name: pdf-creator-dev
+    command: ['docker/start.sh', 'development']
+    ports:
+      - 3003:3000
+    env_file:
+      - ./docker/config/dev.env
+
+  prod:
+    <<: *dev
+    container_name: pdf-creator-prod
+    command: ['docker/start.sh', 'production']
+    ports:
+      - 3002:3000
+    env_file:
+      - ./docker/config/prod.env
+    restart: always
